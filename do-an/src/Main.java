@@ -3,7 +3,8 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc=new Scanner(System.in);
         Service service=new Service();
-        String fileName="services";
-        service.startProgram(sc,fileName);
+        String file1="user.json";
+        String file2="book.json";
+        service.startProgram(sc,file1);
     }
 }

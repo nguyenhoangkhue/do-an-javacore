@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
-public class Service implements SignIn,SignUp,ForgotPassword{
+public class Service extends UserManager implements SignIn,SignUp,ForgotPassword{
 
-        void startProgram(Scanner sc, String fileName){
+        void startProgram(Scanner sc, String file1){
             try {
                 while (true) {
                     System.out.println("-----------------MENU-----------------");
@@ -21,13 +21,13 @@ public class Service implements SignIn,SignUp,ForgotPassword{
                     sc.nextLine();
                     switch (optionMenu) {
                         case 1:
-                            signIn(sc, fileName);
+                            signIn(sc, file1);
                             break;
                         case 2:
-                            signUp(sc, fileName);
+                            signUp(sc, file1);
                             break;
                         case 3:
-                            forgotPassword(sc, fileName);
+                            forgotPassword(sc, file1);
                             break;
                         case 4:
                             return;
@@ -41,31 +41,35 @@ public class Service implements SignIn,SignUp,ForgotPassword{
                 e.printStackTrace();
             }
         }
-    void loginSuccess(Scanner sc, String fileName, User user) {
+    void loginSuccess(Scanner sc, String file1, User user) {
         while (true) {
             System.out.println("-----------------MENU-----------------");
             System.out.println("Enter 1: To change your password");
-            System.out.println("Enter 2: To show books you have red");
-            System.out.println("Enter 3: To show books you are borrowing");
-            System.out.println("Enter 4: To sign out");
-            System.out.println("Enrer 5: To exit");
+            System.out.println("Enter 2: To search find books");
+            System.out.println("Enter 3: To show books you have red");
+            System.out.println("Enter 4: To show books you are borrowing");
+            System.out.println("Enter 5: To sign out");
+            System.out.println("Enrer 6: To exit");
             System.out.println("Nhập lựa chọn của bạn");
             int optionMenu = sc.nextInt();
             sc.nextLine();
             switch (optionMenu) {
                 case 1:
-                    changePassword(sc, user, fileName);
+                    changePassword(sc, user, file1);
                     break;
                 case 2:
-                    booksHaveBeenRed(fileName);
+                    findBooks(sc, );
                     return;
                 case 3:
-                    booksAreBorrowing(fileName);
+                    booksHaveBeenRed(file1);
                     return;
                 case 4:
-                    signOut(sc, fileName);
+                    booksAreBorrowing(file1);
                     return;
                 case 5:
+                    signOut(sc, file1);
+                    return;
+                case 6:
                     return;
                 default:
                     System.out.println("Không hợp lệ!");
@@ -87,20 +91,20 @@ public class Service implements SignIn,SignUp,ForgotPassword{
         System.out.println(userJson);
     }
     @Override
-    public void signIn(Scanner sc, String fileName){
+    public void signIn(Scanner sc, String file1){
         try {
             System.out.println("***************ĐĂNG NHẬP***************");
             System.out.println("Nhập username:");
             String username = sc.nextLine();
             System.out.println("Nhập password:");
             String password = sc.nextLine();
-            List<User> users = getListObjectFromJsonFile(fileName);
+            List<User> users = getListObjectFromJsonFile(file1);
             Optional<List<User>> usersOptional = Optional.ofNullable(users);
             if (usersOptional.isPresent()) {
                 for (User user : users) {
                     if (user.getUserName().equals(username) && user.getPassword().equals(password)) {
                         System.out.println("Xin chao " + user.getUserName() + "!\nBạn có thể thực hiện các hành động sau:");
-                        loginSuccess(sc, fileName, user);
+                        loginSuccess(sc, file1, user);
                         return;
                     }
                 }
@@ -113,15 +117,15 @@ public class Service implements SignIn,SignUp,ForgotPassword{
         }
     }
     @Override
-    public void signUp(Scanner sc, String fileName) {
+    public void signUp(Scanner sc, String file1) {
         try {
             System.out.println("***************ĐĂNG KÝ***************");
             User user = new User();
             System.out.println("Nhập username:");
             while (true) {
                 String username = sc.nextLine();
-                if (checkUsername(username)) {
-                    if (!isExistsUsername(fileName, username)) {
+                if (checkLegalUsername(username)) {
+                    if (!isExistsUsername(file1, username)) {
                         user.setUserName(username);
                         break;
                     } else {
@@ -133,9 +137,9 @@ public class Service implements SignIn,SignUp,ForgotPassword{
             }
 
             System.out.println("Nhap password:");
-            String password = checkPassword(scanner);
+            String password = checkPassword(sc);
             user.setPassword(password);
-            ArrayList<User> users = new ArrayList<>(getListObjectFromJsonFile(fileName));
+            ArrayList<User> users = new ArrayList<>(getListObjectFromJsonFile(file1));
             users.add(user);
             convertObjectToJsonFile("user.json", users);
         } catch (Exception e) {
@@ -143,10 +147,10 @@ public class Service implements SignIn,SignUp,ForgotPassword{
         }
     }
     @Override
-    public void forgotPassword(Scanner sc, String fileName) {
+    public void forgotPassword(Scanner sc, String file1) {
         System.out.println("Vui lòng nhập user name của bạn:");
         String username = sc.nextLine();
-        if (isExistsUsername(fileName, username)) {
+        if (isExistsUsername(file1, username)) {
             while (true) {
                 System.out.println("Vui lòng nhập mật khẩu mới:");
                 String password = checkPassword(sc);
@@ -155,7 +159,7 @@ public class Service implements SignIn,SignUp,ForgotPassword{
                 if (password.equals(passwordAgain)) {
                     System.out.println("Cài đặt mật khẩu thành công!");
                     System.out.println("Vui lòng đăng nhập lại!");
-                    signIn(sc, fileName);
+                    signIn(sc, file1);
                     return;
                 } else {
                     System.out.println("Mật khẩu không trùng khớp!\nVui lòng nhập lại!");
@@ -166,8 +170,8 @@ public class Service implements SignIn,SignUp,ForgotPassword{
         }
     }
     @Override
-    void changePassword(Scanner sc, User user, String fileName) {
-        ArrayList<User> users = new ArrayList<>(getListObjectFromJsonFile(fileName));
+    public void changePassword(Scanner sc, User user, String file1) {
+        ArrayList<User> users = new ArrayList<>(getListObjectFromJsonFile(file1));
         int indexOfUser = users.indexOf(user);
 
         while (true) {
@@ -187,7 +191,7 @@ public class Service implements SignIn,SignUp,ForgotPassword{
         }
     }
     @Override
-    public void signOut(Scanner sc, String fileName) {
-        startProgram(sc, fileName);
+    public void signOut(Scanner sc, String file1) {
+            startProgram(sc, file1);
     }
 }
