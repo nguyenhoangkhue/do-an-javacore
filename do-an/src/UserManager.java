@@ -9,20 +9,14 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public abstract class UserManager {
-    abstract void changePassword(Scanner sc, User user, String fileName);
+    abstract void changePassword(Scanner sc, User user, String file1);
 
-    abstract void signOut(Scanner sc, String fileName);
+    abstract void signOut(Scanner sc, String file1,String file2,User user);
 
-    // Ghi Object JSON file (Object là 1 đối tượng bất kỳ : Có thể là Single Object hoặc List Object)
-    public void convertObjectToJsonFile(String fileName, Object obj) {
+    public void convertObjectToJsonFile(String file1, Object obj) {
         try {
-            // Tạo đối tượng gson
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-            // Tạo đối tượng Writer để ghi nội dung vào file
-            Writer writer = Files.newBufferedWriter(Paths.get(fileName));
-
-            // Ghi object vào file
+            Writer writer = Files.newBufferedWriter(Paths.get(file1));
             gson.toJson(obj, writer);
 
             writer.close();
@@ -30,24 +24,72 @@ public abstract class UserManager {
             e.printStackTrace();
         }
     }
-    public List<User> getListObjectFromJsonFile(String fileName) {
+    public List<User> getListObjectFromJsonFile(String file1) {
         try {
-            // Khởi tạo đối tượng gson
             Gson gson = new Gson();
-
-            // Tạo đối tượng reader để đọc file
-            Reader reader = Files.newBufferedReader(Paths.get(fileName));
-            // Đọc thông tin từ file và binding và class
-
-            //check file khong co data => list rong
+            Reader reader = Files.newBufferedReader(Paths.get(file1));
             if (gson.fromJson(reader, User[].class) == null) {
-                return Collections.emptyList(); //tuong duong List<User> users = new ArrayList<>();
+                return Collections.emptyList();
             } else {
                 List<User> users = Arrays.asList(gson.fromJson(reader, User[].class));
-                // Đọc file xong thì đóng lại
-                // Và trả về kết quả
                 reader.close();
                 return users;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+    public void convertObjectToJsonFile1(String file2, Object obj) {
+        try {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Writer writer = Files.newBufferedWriter(Paths.get(file2));
+            gson.toJson(obj, writer);
+
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public List<Book> getListObjectFromJsonFile1(String file2) {
+        try {
+            Gson gson = new Gson();
+
+            Reader reader = Files.newBufferedReader(Paths.get(file2));
+            if (gson.fromJson(reader, User[].class) == null) {
+                return Collections.emptyList();
+            } else {
+                List<Book> books = Arrays.asList(gson.fromJson(reader, Book[].class));
+                reader.close();
+                return books;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+    public void convertObjectToJsonFile2(String file3, Object obj) {
+        try {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Writer writer = Files.newBufferedWriter(Paths.get(file3));
+            gson.toJson(obj, writer);
+
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public List<Admin> getListObjectFromJsonFile2(String file3) {
+        try {
+            Gson gson = new Gson();
+
+            Reader reader = Files.newBufferedReader(Paths.get(file3));
+            if (gson.fromJson(reader, User[].class) == null) {
+                return Collections.emptyList();
+            } else {
+                List<Admin> admins = Arrays.asList(gson.fromJson(reader, Admin[].class));
+                reader.close();
+                return admins;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,8 +113,8 @@ public abstract class UserManager {
                 " ^[a-zA-Z0-9._-]{3,15}$";
         return Pattern.matches(USERNAME_PATTERN, username);
     }
-    boolean isExistsUsername(String fileName, String username) {
-        List<User> users = getListObjectFromJsonFile(fileName);
+    boolean isExistsUsername(String file1, String username) {
+        List<User> users = getListObjectFromJsonFile(file1);
         Optional<List<User>> usersOptional = Optional.ofNullable(users);
         if (usersOptional.isPresent()) {
             for (User user : users) {
