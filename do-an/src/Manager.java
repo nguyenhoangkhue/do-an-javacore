@@ -8,10 +8,10 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Pattern;
 
-public abstract class UserManager {
+public abstract class Manager {
     abstract void changePassword(Scanner sc, User user, String file1);
-
-    abstract void signOut(Scanner sc, String file1,String file2,User user);
+    abstract void adminChangePassword(Scanner sc, Admin admin, String file3);
+    abstract void signOut(Scanner sc, String file1,String file2,User user,String file3,Admin admin);
 
     public void convertObjectToJsonFile(String file1, Object obj) {
         try {
@@ -56,7 +56,7 @@ public abstract class UserManager {
             Gson gson = new Gson();
 
             Reader reader = Files.newBufferedReader(Paths.get(file2));
-            if (gson.fromJson(reader, User[].class) == null) {
+            if (gson.fromJson(reader, Book[].class) == null) {
                 return Collections.emptyList();
             } else {
                 List<Book> books = Arrays.asList(gson.fromJson(reader, Book[].class));
@@ -84,7 +84,7 @@ public abstract class UserManager {
             Gson gson = new Gson();
 
             Reader reader = Files.newBufferedReader(Paths.get(file3));
-            if (gson.fromJson(reader, User[].class) == null) {
+            if (gson.fromJson(reader, Admin[].class) == null) {
                 return Collections.emptyList();
             } else {
                 List<Admin> admins = Arrays.asList(gson.fromJson(reader, Admin[].class));
@@ -113,12 +113,40 @@ public abstract class UserManager {
                 " ^[a-zA-Z0-9._-]{3,15}$";
         return Pattern.matches(USERNAME_PATTERN, username);
     }
-    boolean isExistsUsername(String file1, String username) {
+    boolean isExistsUsername(String file1, String username,String file3) {
         List<User> users = getListObjectFromJsonFile(file1);
+        List<Admin> admins = getListObjectFromJsonFile2(file3);
         Optional<List<User>> usersOptional = Optional.ofNullable(users);
-        if (usersOptional.isPresent()) {
+        Optional<List<Admin>> adminsOptional = Optional.ofNullable(admins);
+        if (usersOptional.isPresent()||adminsOptional.isPresent()) {
             for (User user : users) {
-                if (user.getUserName().equals(username)) {
+                for (User admin : admins){
+                    if (user.getUserName().equals(username)||admin.getUserName().equals(username)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    boolean isExistsTitle(String file2, String title) {
+        List<Book> books = getListObjectFromJsonFile1(file2);
+        Optional<List<Book>> booksOptional = Optional.ofNullable(books);
+        if (booksOptional.isPresent()) {
+            for (Book book : books){
+                if (book.getTitle().equals(title)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    boolean isExistsId(String file2, String uuid) {
+        List<Book> books = getListObjectFromJsonFile1(file2);
+        Optional<List<Book>> idOptional = Optional.ofNullable(books);
+        if (idOptional.isPresent()) {
+            for (Book book : books){
+                if (book.getId().equals(uuid)) {
                     return true;
                 }
             }
