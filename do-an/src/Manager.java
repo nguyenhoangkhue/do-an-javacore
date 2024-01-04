@@ -28,10 +28,11 @@ public abstract class Manager {
         try {
             Gson gson = new Gson();
             Reader reader = Files.newBufferedReader(Paths.get(file1));
-            if (gson.fromJson(reader, User[].class) == null) {
+            User[] usersFile = gson.fromJson(reader, User[].class);
+            if (usersFile == null) {
                 return Collections.emptyList();
             } else {
-                List<User> users = Arrays.asList(gson.fromJson(reader, User[].class));
+                List<User> users = Arrays.asList(usersFile);
                 reader.close();
                 return users;
             }
@@ -54,12 +55,12 @@ public abstract class Manager {
     public List<Book> getListObjectFromJsonFile1(String file2) {
         try {
             Gson gson = new Gson();
-
             Reader reader = Files.newBufferedReader(Paths.get(file2));
-            if (gson.fromJson(reader, Book[].class) == null) {
+            Book[] booksFile = gson.fromJson(reader, Book[].class);
+            if (booksFile == null) {
                 return Collections.emptyList();
             } else {
-                List<Book> books = Arrays.asList(gson.fromJson(reader, Book[].class));
+                List<Book> books = Arrays.asList(booksFile);
                 reader.close();
                 return books;
             }
@@ -82,12 +83,12 @@ public abstract class Manager {
     public List<Admin> getListObjectFromJsonFile2(String file3) {
         try {
             Gson gson = new Gson();
-
             Reader reader = Files.newBufferedReader(Paths.get(file3));
-            if (gson.fromJson(reader, Admin[].class) == null) {
+            Admin[] adminsFile = gson.fromJson(reader, Admin[].class);
+            if (adminsFile == null) {
                 return Collections.emptyList();
             } else {
-                List<Admin> admins = Arrays.asList(gson.fromJson(reader, Admin[].class));
+                List<Admin> admins = Arrays.asList(adminsFile);
                 reader.close();
                 return admins;
             }
@@ -96,9 +97,9 @@ public abstract class Manager {
         }
         return Collections.emptyList();
     }
-    String checkPassword(Scanner scanner) {
+    String checkPassword(Scanner sc) {
         while (true) {
-            String password = scanner.nextLine();
+            String password = sc.nextLine();
             Pattern pattern = Pattern.compile("\\S{7,15}");
             boolean isPassword = pattern.matcher(password).matches();
             if (!isPassword) {
@@ -110,7 +111,7 @@ public abstract class Manager {
     }
     boolean checkLegalUsername(String username) {
         String USERNAME_PATTERN =
-                " ^[a-zA-Z0-9._-]{3,15}$";
+                "^[a-zA-Z0-9._-]{3,15}$";
         return Pattern.matches(USERNAME_PATTERN, username);
     }
     boolean isExistsUsername(String file1, String username,String file3) {
@@ -153,4 +154,14 @@ public abstract class Manager {
         }
         return false;
     }
+    boolean status(String file2,String strBookName){
+        List<Book> listBooks = getListObjectFromJsonFile1(file2);
+        for (Book book : listBooks) {
+            if (book.getTitle().equals(strBookName)||book.getStatus().equals("active")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

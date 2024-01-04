@@ -5,7 +5,9 @@
       "category": ["Action","Drama"],
       "author": "Shawn Calvey",
       "page_number": 61,
-      "release_year": 2009
+      "release_year": 2009,
+      "status": "active",
+      "userBorrow": null
     },
     {
       "id": 2,
@@ -13,7 +15,9 @@
       "category": ["Drama","Romance", "War"],
       "author": "Daisi Richold",
       "page_number": 131,
-      "release_year": 2009
+      "release_year": 2009,
+      "status": "active",
+      "userBorrow": null
     },
     {
       "id": 3,
@@ -21,7 +25,9 @@
       "category": ["Crime","Drama"],
       "author": "Chauncey Antrobus",
       "page_number": 154,
-      "release_year": 2004
+      "release_year": 2004,
+      "status": "active",
+      "userBorrow": null
     },
     {
       "id": 4,
@@ -29,7 +35,9 @@
       "category": ["Adventure","Comedy"],
       "author": "Marina Barnicott",
       "page_number": 142,
-      "release_year": 2007
+      "release_year": 2007,
+      "status": "active",
+      "userBorrow": null
     },
     {
       "id": 5,
@@ -37,7 +45,9 @@
       "category": ["Horror","Mystery","Thriller"],
       "author": "Casar Danes",
       "page_number": 191,
-      "release_year": 2011
+      "release_year": 2011,
+      "status": "active",
+      "userBorrow": null
     },
     {
       "id": 6,
@@ -45,7 +55,9 @@
       "category": ["Drama"],
       "author": "Trix Drennan",
       "page_number": 193,
-      "release_year": 2013
+      "release_year": 2013,
+      "status": "active",
+      "userBorrow": null
     },
     {
       "id": 7,
@@ -53,7 +65,9 @@
       "category": ["Horror","Sci-Fi"],
       "author": "Beck Sneaker",
       "page_number": 42,
-      "release_year": 1995
+      "release_year": 1995,
+      "status": "active",
+      "userBorrow": null
     },
     {
       "id": 8,
@@ -61,7 +75,9 @@
       "category": ["Horror"],
       "author": "Charla Durtnel",
       "page_number": 76,
-      "release_year": 2006
+      "release_year": 2006,
+      "status": "active",
+      "userBorrow": null
     },
     {
       "id": 9,
@@ -69,7 +85,9 @@
       "category": ["Comedy","Romance"],
       "author": "Alejandrina Oswell",
       "page_number": 176,
-      "release_year": 2001
+      "release_year": 2001,
+      "status": "active",
+      "userBorrow": null
     },
     {
       "id": 10,
@@ -77,6 +95,8 @@
       "category": ["Drama"],
       "author": "Iolande Glanville",
       "page_number": 96,
-      "release_year": 2008
+      "release_year": 2008,
+      "status": "active",
+      "userBorrow": null
     }
   ]

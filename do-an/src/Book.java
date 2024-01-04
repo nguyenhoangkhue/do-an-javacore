@@ -5,16 +5,20 @@ public class Book {
     private String author;
     private int page_number;
     private int release_year;
+    private String status;
+    private User userBorrow;
 
     public Book(){
     }
-    public Book(String id,String title,String[] category,String author,int page_number,int release_year){
+    public Book(String id,String title,String[] category,String author,int page_number,int release_year,String status,User userBorrow){
     this.id=id;
     this.title=title;
     this.category=category;
     this.author=author;
     this.page_number=page_number;
     this.release_year=release_year;
+    this.status=status;
+    this.userBorrow=userBorrow;
     }
 
     public String getId() {
@@ -63,5 +67,21 @@ public class Book {
 
     public void setRelease_year(int release_year) {
         this.release_year = release_year;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public User getUserBorrow() {
+        return userBorrow;
+    }
+
+    public void setUserBorrow(User userBorrow) {
+        this.userBorrow = userBorrow;
     }
 }
