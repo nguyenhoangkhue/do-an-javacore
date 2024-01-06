@@ -46,11 +46,10 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             System.out.println("-----------------MENU-----------------");
             System.out.println("Enter 1: To change your password");
             System.out.println("Enter 2: To find books");
-            System.out.println("Enter 3: To borrow books");
-            System.out.println("Enter 4: To show books you have red");
-            System.out.println("Enter 5: To show books you are borrowing");
-            System.out.println("Enter 6: To sign out");
-            System.out.println("Enrer 7: To exit");
+            System.out.println("Enter 3: To show books you have red");
+            System.out.println("Enter 4: To show books you are borrowing");
+            System.out.println("Enter 5: To sign out");
+            System.out.println("Enrer 6: To exit");
             System.out.println("Nhập lựa chọn của bạn");
             int optionMenu = sc.nextInt();
             sc.nextLine();
@@ -61,18 +60,15 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                 case 2:
                     findBooks(sc,file2);
                 case 3:
-                    borrowBooks(sc,file2);
-                    break;
-                case 4:
                     booksHaveBeenRed(file1);
                     return;
-                case 5:
+                case 4:
                     booksAreBorrowing(sc,file1,file2,bookinfo);
                     return;
-                case 6:
+                case 5:
                     signOut(sc, file1,file2,user,file3,admin,bookinfo);
                     return;
-                case 7:
+                case 6:
                     return;
                 default:
                     System.out.println("Không hợp lệ!");
@@ -223,6 +219,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
         try {
             System.out.println("***************THÊM SÁCH***************");
             Book book = new Book();
+            System.out.println("Nhập thông tin sách");
             System.out.println("Nhập tên sách:");
             while (true) {
                 String title = sc.nextLine();
@@ -246,10 +243,15 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                     }
                 }
             }
-            System.out.println("Nhập thông tin sách");
+            System.out.println("Nhập số thể loại của sách");
+            int n=sc.nextInt();
+            sc.nextLine();
             System.out.println("Nhập thể loại:");
-            String[] category= new String[]{sc.nextLine()};
+            String[] category= new String[n];
             book.setCategory(category);
+            for (int i=0;i<n;i++){
+                category[i]=sc.nextLine();
+            }
             System.out.println("Nhập tên tác giả:");
             String author=sc.nextLine();
             book.setAuthor(author);
@@ -264,6 +266,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             ArrayList<Book> books = new ArrayList<>(getListObjectFromJsonFile2(file2));
             books.add(book);
             convertObjectToJsonFile2("book.json", books);
+            System.out.println("Thêm sách thành công!");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -369,6 +372,8 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                             if (contains) {
                                 String bookJson = gson.toJson(book);
                                 System.out.println(bookJson);
+                            }else {
+                                System.out.println("Thể loại bạn muốn tìm không tồn tại!\nVui lòng nhập thể loại khác!");
                             }
                         }
                         break;
@@ -397,24 +402,16 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
         System.out.println(adminJson);
     }
 
-    public void borrowBooks(Scanner sc,String file2) {
-        System.out.println("Nhập tên sách muốn mượn:");
-        String strBookName = sc.nextLine();
-        if (status(file2, strBookName)) {
-            System.out.println("Mượn sách thành công!\nHãy trả lại sách sau 30 ngày để không bị phạt!");
-        } else {
-            System.out.println("Sách bạn muốn mượn không còn!\nVui lòng mượn sách khác hoặc quay lại sau!");
-        }
-    }
-
     public void booksAreBorrowing(Scanner sc,String file1,String file2,Book bookinfo){
         List<Book> listBooks = getListObjectFromJsonFile2(file2);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        System.out.println("Nhập tên sách đang mượn");
-        String searchBorrowing=sc.nextLine();
+        System.out.println("Nhập id sách bạn đang mượn");
+        String id=sc.nextLine();
+        List<User> user = getListObjectFromJsonFile1(file1);
         for (Book book : listBooks) {
-            if (book.getTitle().equals(searchBorrowing)) {
-                while(true){
+            for (User anUser:user){
+            if (book.getId().equals(id)||book.getTitle().equals(anUser.getBooksAreBorrowing())) {
+                while (true) {
                     System.out.println("Sách bạn cần tìm là:");
                     String bookJson = gson.toJson(book);
                     System.out.println(bookJson);
@@ -422,22 +419,25 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                     System.out.println("Enter 2: To return the book");
                     System.out.println("Enter 3: To exit");
                     System.out.println("Nhập lựa chọn của bạn");
-                    int optionMenu=sc.nextInt();
+                    int optionMenu = sc.nextInt();
                     sc.nextLine();
-                    switch (optionMenu){
+                    switch (optionMenu) {
                         case 1:
                             printBook(bookinfo);
                             break;
                         case 2:
-                            List<User> user = getListObjectFromJsonFile1(file1);
                             System.out.println("Trả sách thành công!");
-                            book.setStatus("unavailable");
+                            book.setStatus("available");
+                            book.setUserBorrow(null);
                             convertObjectToJsonFile2("book.json", listBooks);
-                                for (User anUser:user){
-                                    anUser.setBooksHaveBeenRed(book);
+                            String[] booksHaveBeenRed = new String[listBooks.size()];
+                            for (int i = 0; i < listBooks.size(); i++) {
+                                if (listBooks.get(i) == null && listBooks.get(i) != book) {
+                                    booksHaveBeenRed[i] = book.getTitle();
+                                    anUser.setBooksHaveBeenRed(booksHaveBeenRed);
+                                    convertObjectToJsonFile1("user.json", user);
                                 }
-
-
+                            }
                             break;
                         case 3:
                             break;
@@ -447,13 +447,22 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                     }
                 }
             }
+            }
+
         }
+        System.out.println("Không có kết quả phù hợp!\nVui lòng nhập lại tên sách!");
     }
     void printBook(Book book) {
         System.out.println("Thông tin sách là");
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String bookJson = gson.toJson(book);
         System.out.println(bookJson);
+    }
+    void booksHaveBeenRed(String file1){
+        List<User> users = getListObjectFromJsonFile1(file1);
+        for (User user:users ){
+            System.out.println(user.getBooksHaveBeenRed());
+        }
     }
     void borrowBooks(Scanner sc,String file2,String file1){
         System.out.println("Vui lòng đăng nhập trước khi mượn sách");
@@ -464,8 +473,8 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
         List<User> users = getListObjectFromJsonFile1(file1);
         Optional<List<User>> usersOptional = Optional.ofNullable(users);
         if (usersOptional.isPresent()) {
-            for (User anuser : users) {
-                if (anuser.getUserName().equals(username) && anuser.getPassword().equals(password)) {
+            for (User anUser : users) {
+                if (anUser.getUserName().equals(username) && anUser.getPassword().equals(password)) {
                     while (true){
                         List<Book> listBooks = getListObjectFromJsonFile2(file2);
                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -488,6 +497,14 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                                             book.setStatus("unavailable");
                                             book.setUserBorrow(username);
                                             convertObjectToJsonFile2("book.json", listBooks);
+                                            String[] booksAreBorrowing=new String[listBooks.size()];
+                                            for(int i=0;i<listBooks.size();i++){
+                                                if (listBooks.get(i)==null&&listBooks.get(i)!=book){
+                                                    booksAreBorrowing[i]=strBookName;
+                                                    anUser.setBooksHaveBeenRed(booksAreBorrowing);
+                                                    convertObjectToJsonFile1("user.json",users);
+                                                }
+                                            }
                                             break;
                                         }else {
                                             System.out.println("Sách bạn muốn mượn không còn!\nVui lòng mượn sách khác hoặc quay lại sau!");
@@ -503,8 +520,12 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                                 break;
                         }
                     }
+                }else {
+                    System.out.println("Tài khoản hoặc mật khẩu không chính xác!\nVui lòng nhập lại");
                 }
             }
+        }else {
+            System.out.println("Tài khoản hoặc mật khẩu không chính xác!\nVui lòng nhập lại");
         }
     }
 }

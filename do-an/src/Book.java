@@ -6,11 +6,11 @@ public class Book {
     private int page_number;
     private int release_year;
     private String status;
-    private User userBorrow;
+    private String userBorrow;
 
     public Book(){
     }
-    public Book(String id,String title,String[] category,String author,int page_number,int release_year,String status,User userBorrow){
+    public Book(String id,String title,String[] category,String author,int page_number,int release_year,String status,String userBorrow){
     this.id=id;
     this.title=title;
     this.category=category;
@@ -21,7 +21,7 @@ public class Book {
     this.userBorrow=userBorrow;
     }
 
-    public String getId() {
+    public String   getId() {
         return id;
     }
 
@@ -77,11 +77,11 @@ public class Book {
         this.status = status;
     }
 
-    public User getUserBorrow() {
+    public String getUserBorrow() {
         return userBorrow;
     }
 
-    public void setUserBorrow(User userBorrow) {
+    public void setUserBorrow(String userBorrow) {
         this.userBorrow = userBorrow;
     }
 }

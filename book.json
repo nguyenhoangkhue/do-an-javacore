@@ -1,102 +1,121 @@
 [
-    {
-      "id": 1,
-      "title": "Heaven's Burning",
-      "category": ["Action","Drama"],
-      "author": "Shawn Calvey",
-      "page_number": 61,
-      "release_year": 2009,
-      "status": "active",
-      "userBorrow": null
-    },
-    {
-      "id": 2,
-      "title": "Operator 13",
-      "category": ["Drama","Romance", "War"],
-      "author": "Daisi Richold",
-      "page_number": 131,
-      "release_year": 2009,
-      "status": "active",
-      "userBorrow": null
-    },
-    {
-      "id": 3,
-      "title": "Ghosts... of the Civil Dead",
-      "category": ["Crime","Drama"],
-      "author": "Chauncey Antrobus",
-      "page_number": 154,
-      "release_year": 2004,
-      "status": "active",
-      "userBorrow": null
-    },
-    {
-      "id": 4,
-      "title": "The African",
-      "category": ["Adventure","Comedy"],
-      "author": "Marina Barnicott",
-      "page_number": 142,
-      "release_year": 2007,
-      "status": "active",
-      "userBorrow": null
-    },
-    {
-      "id": 5,
-      "title": "House on Sorority Row, The",
-      "category": ["Horror","Mystery","Thriller"],
-      "author": "Casar Danes",
-      "page_number": 191,
-      "release_year": 2011,
-      "status": "active",
-      "userBorrow": null
-    },
-    {
-      "id": 6,
-      "title": "Bang, Bang, You're Dead",
-      "category": ["Drama"],
-      "author": "Trix Drennan",
-      "page_number": 193,
-      "release_year": 2013,
-      "status": "active",
-      "userBorrow": null
-    },
-    {
-      "id": 7,
-      "title": "The Bone Snatcher",
-      "category": ["Horror","Sci-Fi"],
-      "author": "Beck Sneaker",
-      "page_number": 42,
-      "release_year": 1995,
-      "status": "active",
-      "userBorrow": null
-    },
-    {
-      "id": 8,
-      "title": "Mummy, The",
-      "category": ["Horror"],
-      "author": "Charla Durtnel",
-      "page_number": 76,
-      "release_year": 2006,
-      "status": "active",
-      "userBorrow": null
-    },
-    {
-      "id": 9,
-      "title": "Hope Springs",
-      "category": ["Comedy","Romance"],
-      "author": "Alejandrina Oswell",
-      "page_number": 176,
-      "release_year": 2001,
-      "status": "active",
-      "userBorrow": null
-    },
-    {
-      "id": 10,
-      "title": "Masseurs and a Woman, The (Anma to onna)",
-      "category": ["Drama"],
-      "author": "Iolande Glanville",
-      "page_number": 96,
-      "release_year": 2008,
-      "status": "active",
-      "userBorrow": null
-    }
-  ]
+  {
+    "id": "1",
+    "title": "Heaven\u0027s Burning",
+    "category": [
+      "Action",
+      "Drama"
+    ],
+    "author": "Shawn Calvey",
+    "page_number": 61,
+    "release_year": 2009,
+    "status": "available"
+  },
+  {
+    "id": "2",
+    "title": "Operator 13",
+    "category": [
+      "Drama",
+      "Romance",
+      "War"
+    ],
+    "author": "Daisi Richold",
+    "page_number": 131,
+    "release_year": 2009,
+    "status": "available"
+  },
+  {
+    "id": "3",
+    "title": "Ghosts... of the Civil Dead",
+    "category": [
+      "Crime",
+      "Drama"
+    ],
+    "author": "Chauncey Antrobus",
+    "page_number": 154,
+    "release_year": 2004,
+    "status": "available"
+  },
+  {
+    "id": "4",
+    "title": "The African",
+    "category": [
+      "Adventure",
+      "Comedy"
+    ],
+    "author": "Marina Barnicott",
+    "page_number": 142,
+    "release_year": 2007,
+    "status": "available"
+  },
+  {
+    "id": "5",
+    "title": "House on Sorority Row, The",
+    "category": [
+      "Horror",
+      "Mystery",
+      "Thriller"
+    ],
+    "author": "Casar Danes",
+    "page_number": 191,
+    "release_year": 2011,
+    "status": "available"
+  },
+  {
+    "id": "6",
+    "title": "Bang, Bang, You\u0027re Dead",
+    "category": [
+      "Drama"
+    ],
+    "author": "Trix Drennan",
+    "page_number": 193,
+    "release_year": 2013,
+    "status": "available"
+  },
+  {
+    "id": "7",
+    "title": "The Bone Snatcher",
+    "category": [
+      "Horror",
+      "Sci-Fi"
+    ],
+    "author": "Beck Sneaker",
+    "page_number": 42,
+    "release_year": 1995,
+    "status": "available"
+  },
+  {
+    "id": "8",
+    "title": "Mummy, The",
+    "category": [
+      "Horror"
+    ],
+    "author": "Charla Durtnel",
+    "page_number": 76,
+    "release_year": 2006,
+    "status": "available"
+  },
+  {
+    "id": "9",
+    "title": "Hope Springs",
+    "category": [
+      "Comedy",
+      "Romance"
+    ],
+    "author": "Alejandrina Oswell",
+    "page_number": 176,
+    "release_year": 2001,
+    "status": "available"
+  },
+  {
+    "id": "10",
+    "title": "Masseurs and a Woman, The (Anma to onna)",
+    "category": [
+      "Drama"
+    ],
+    "author": "Iolande Glanville",
+    "page_number": 96,
+    "release_year": 2008,
+    "status": "available"
+  }
+]
