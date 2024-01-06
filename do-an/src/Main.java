@@ -8,6 +8,7 @@ public class Main {
         String file3="admin.json";
         User user=new User();
         Admin admin=new Admin();
-        service.startProgram(sc,file1,file2,user,file3,admin);
+        Book bookinfo=new Book();
+        service.startProgram(sc,file1,file2,user,file3,admin,bookinfo);
     }
 }

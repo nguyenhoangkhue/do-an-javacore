@@ -11,9 +11,9 @@ import java.util.regex.Pattern;
 public abstract class Manager {
     abstract void changePassword(Scanner sc, User user, String file1);
     abstract void adminChangePassword(Scanner sc, Admin admin, String file3);
-    abstract void signOut(Scanner sc, String file1,String file2,User user,String file3,Admin admin);
+    abstract void signOut(Scanner sc, String file1,String file2,User user,String file3,Admin admin,Book bookinfo);
 
-    public void convertObjectToJsonFile(String file1, Object obj) {
+    public void convertObjectToJsonFile1(String file1, Object obj) {
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             Writer writer = Files.newBufferedWriter(Paths.get(file1));
@@ -24,7 +24,7 @@ public abstract class Manager {
             e.printStackTrace();
         }
     }
-    public List<User> getListObjectFromJsonFile(String file1) {
+    public List<User> getListObjectFromJsonFile1(String file1) {
         try {
             Gson gson = new Gson();
             Reader reader = Files.newBufferedReader(Paths.get(file1));
@@ -41,7 +41,7 @@ public abstract class Manager {
         }
         return Collections.emptyList();
     }
-    public void convertObjectToJsonFile1(String file2, Object obj) {
+    public void convertObjectToJsonFile2(String file2, Object obj) {
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             Writer writer = Files.newBufferedWriter(Paths.get(file2));
@@ -52,7 +52,7 @@ public abstract class Manager {
             e.printStackTrace();
         }
     }
-    public List<Book> getListObjectFromJsonFile1(String file2) {
+    public List<Book> getListObjectFromJsonFile2(String file2) {
         try {
             Gson gson = new Gson();
             Reader reader = Files.newBufferedReader(Paths.get(file2));
@@ -69,7 +69,7 @@ public abstract class Manager {
         }
         return Collections.emptyList();
     }
-    public void convertObjectToJsonFile2(String file3, Object obj) {
+    public void convertObjectToJsonFile3(String file3, Object obj) {
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             Writer writer = Files.newBufferedWriter(Paths.get(file3));
@@ -80,7 +80,7 @@ public abstract class Manager {
             e.printStackTrace();
         }
     }
-    public List<Admin> getListObjectFromJsonFile2(String file3) {
+    public List<Admin> getListObjectFromJsonFile3(String file3) {
         try {
             Gson gson = new Gson();
             Reader reader = Files.newBufferedReader(Paths.get(file3));
@@ -115,8 +115,8 @@ public abstract class Manager {
         return Pattern.matches(USERNAME_PATTERN, username);
     }
     boolean isExistsUsername(String file1, String username,String file3) {
-        List<User> users = getListObjectFromJsonFile(file1);
-        List<Admin> admins = getListObjectFromJsonFile2(file3);
+        List<User> users = getListObjectFromJsonFile1(file1);
+        List<Admin> admins = getListObjectFromJsonFile3(file3);
         Optional<List<User>> usersOptional = Optional.ofNullable(users);
         Optional<List<Admin>> adminsOptional = Optional.ofNullable(admins);
         if (usersOptional.isPresent()||adminsOptional.isPresent()) {
@@ -131,7 +131,7 @@ public abstract class Manager {
         return false;
     }
     boolean isExistsTitle(String file2, String title) {
-        List<Book> books = getListObjectFromJsonFile1(file2);
+        List<Book> books = getListObjectFromJsonFile2(file2);
         Optional<List<Book>> booksOptional = Optional.ofNullable(books);
         if (booksOptional.isPresent()) {
             for (Book book : books){
@@ -143,7 +143,7 @@ public abstract class Manager {
         return false;
     }
     boolean isExistsId(String file2, String uuid) {
-        List<Book> books = getListObjectFromJsonFile1(file2);
+        List<Book> books = getListObjectFromJsonFile2(file2);
         Optional<List<Book>> idOptional = Optional.ofNullable(books);
         if (idOptional.isPresent()) {
             for (Book book : books){
@@ -155,7 +155,7 @@ public abstract class Manager {
         return false;
     }
     boolean status(String file2,String strBookName){
-        List<Book> listBooks = getListObjectFromJsonFile1(file2);
+        List<Book> listBooks = getListObjectFromJsonFile2(file2);
         for (Book book : listBooks) {
             if (book.getTitle().equals(strBookName)||book.getStatus().equals("active")) {
                 return true;

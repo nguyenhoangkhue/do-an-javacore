@@ -5,28 +5,31 @@ import java.util.*;
 
 public class Service extends Manager implements SignIn,SignUp,ForgotPassword,SignOut,AddNewAdmin,AddNewBooks{
 
-        void startProgram(Scanner sc, String file1,String file2,User user,String file3,Admin admin){
+        void startProgram(Scanner sc, String file1,String file2,User user,String file3,Admin admin,Book bookinfo){
             try {
                 while (true) {
                     System.out.println("-----------------MENU-----------------");
                     System.out.println("Enter 1: To Sign in");
                     System.out.println("Enter 2: To Sign up");
                     System.out.println("Enter 3: If you forgot your password");
-                    System.out.println("Enter 4: To exit");
+                    System.out.println("Enter 4: To borrow books");
+                    System.out.println("Enter 5: To exit");
                     System.out.println("Nhập lựa chọn của bạn");
                     int optionMenu=sc.nextInt();
                     sc.nextLine();
                     switch (optionMenu) {
                         case 1:
-                            signIn(sc, file1,file2,user,file3,admin);
+                            signIn(sc, file1,file2,user,file3,admin,bookinfo);
                             break;
                         case 2:
                             signUp(sc, file1,file3);
                             break;
                         case 3:
-                            forgotPassword(sc, file1,file2,user,file3,admin);
+                            forgotPassword(sc, file1,file2,user,file3,admin,bookinfo);
                             break;
                         case 4:
+                            borrowBooks(sc,file2,file1);
+                        case 5:
                             return;
                         default:
                             System.out.println("Không hợp lệ!");
@@ -38,7 +41,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                 e.printStackTrace();
             }
         }
-    public void userloginSuccess(Scanner sc, String file1, User user,String file2,String file3,Admin admin) {
+    public void userloginSuccess(Scanner sc, String file1, User user,String file2,String file3,Admin admin,Book bookinfo) {
         while (true) {
             System.out.println("-----------------MENU-----------------");
             System.out.println("Enter 1: To change your password");
@@ -60,14 +63,14 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                 case 3:
                     borrowBooks(sc,file2);
                     break;
-//                case 4:
-//                    booksHaveBeenRed(file1);
-//                    return;
-//                case 5:
-//                    booksAreBorrowing(file1);
-//                    return;
+                case 4:
+                    booksHaveBeenRed(file1);
+                    return;
+                case 5:
+                    booksAreBorrowing(sc,file1,file2,bookinfo);
+                    return;
                 case 6:
-                    signOut(sc, file1,file2,user,file3,admin);
+                    signOut(sc, file1,file2,user,file3,admin,bookinfo);
                     return;
                 case 7:
                     return;
@@ -77,7 +80,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             }
         }
     }
-    public void adminloginSuccess(Scanner sc, String file1, User user,String file2,String file3,Admin admin) {
+    public void adminloginSuccess(Scanner sc, String file1, User user,String file2,String file3,Admin admin,Book bookinfo) {
         while (true) {
             System.out.println("-----------------MENU-----------------");
             System.out.println("Enter 1: To change your password");
@@ -110,7 +113,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                     addNewBooks(sc,file2);
                     break;
                 case 7:
-                    signOut(sc, file1,file2,user,file3,admin);
+                    signOut(sc, file1,file2,user,file3,admin,bookinfo);
                     return;
                 case 8:
                     return;
@@ -121,27 +124,27 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
         }
     }
     @Override
-    public void signIn(Scanner sc, String file1,String file2,User user,String file3,Admin admin){
+    public void signIn(Scanner sc, String file1,String file2,User user,String file3,Admin admin,Book bookinfo){
         try {
             System.out.println("***************ĐĂNG NHẬP***************");
             System.out.println("Nhập username:");
             String username = sc.nextLine();
             System.out.println("Nhập password:");
             String password = sc.nextLine();
-            List<User> users = getListObjectFromJsonFile(file1);
+            List<User> users = getListObjectFromJsonFile1(file1);
             Optional<List<User>> usersOptional = Optional.ofNullable(users);
-            List<Admin> admins = getListObjectFromJsonFile2(file3);
+            List<Admin> admins = getListObjectFromJsonFile3(file3);
             Optional<List<Admin>> adminsOptional = Optional.ofNullable(admins);
             if (usersOptional.isPresent()||adminsOptional.isPresent()) {
-                for (User anuser : users) {
+                for (User anUser : users) {
                     for (Admin anAdmin:admins){
-                        if (anuser.getUserName().equals(username) && anuser.getPassword().equals(password)) {
-                            System.out.println("Xin chào " + anuser.getUserName() + "!\nBạn có thể thực hiện các hành động sau:");
-                            userloginSuccess(sc, file1, user, file2,file3,admin);
+                        if (anUser.getUserName().equals(username) && anUser.getPassword().equals(password)) {
+                            System.out.println("Xin chào " + anUser.getUserName() + "!\nBạn có thể thực hiện các hành động sau:");
+                            userloginSuccess(sc, file1, user, file2,file3,admin,bookinfo);
                             return;
                         } else if (anAdmin.getUserName().equals(username)&&anAdmin.getPassword().equals(password)) {
                             System.out.println("Xin chào " + anAdmin.getUserName() + "!\nBạn có thể thực hiện các hành động sau:");
-                            adminloginSuccess(sc, file1, user, file2,file3,admin);
+                            adminloginSuccess(sc, file1, user, file2,file3,admin,bookinfo);
                             return;
                         }
                     }
@@ -177,9 +180,9 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             System.out.println("Nhập password:");
             String password = checkPassword(sc);
             user.setPassword(password);
-            ArrayList<User> users = new ArrayList<>(getListObjectFromJsonFile(file1));
+            ArrayList<User> users = new ArrayList<>(getListObjectFromJsonFile1(file1));
             users.add(user);
-            convertObjectToJsonFile("user.json", users);
+            convertObjectToJsonFile1("user.json", users);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -207,9 +210,9 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             System.out.println("Nhập password:");
             String password = checkPassword(sc);
             admin.setPassword(password);
-            ArrayList<Admin> admins = new ArrayList<>(getListObjectFromJsonFile2(file3));
+            ArrayList<Admin> admins = new ArrayList<>(getListObjectFromJsonFile3(file3));
             admins.add(admin);
-            convertObjectToJsonFile2("admin.json", admins);
+            convertObjectToJsonFile3("admin.json", admins);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -258,15 +261,15 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             book.setRelease_year(releaseYear);
             String status="available";
             book.setStatus(status);
-            ArrayList<Book> books = new ArrayList<>(getListObjectFromJsonFile1(file2));
+            ArrayList<Book> books = new ArrayList<>(getListObjectFromJsonFile2(file2));
             books.add(book);
-            convertObjectToJsonFile1("book.json", books);
+            convertObjectToJsonFile2("book.json", books);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     @Override
-    public void forgotPassword(Scanner sc, String file1,String file2,User user,String file3,Admin admin) {
+    public void forgotPassword(Scanner sc, String file1,String file2,User user,String file3,Admin admin,Book bookinfo) {
         System.out.println("Vui lòng nhập user name của bạn:");
         String username = sc.nextLine();
         if (isExistsUsername(file1, username,file3)) {
@@ -278,7 +281,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                 if (password.equals(passwordAgain)) {
                     System.out.println("Cài đặt mật khẩu thành công!");
                     System.out.println("Vui lòng đăng nhập lại!");
-                    signIn(sc, file1,file2,user,file3,admin);
+                    signIn(sc, file1,file2,user,file3,admin,bookinfo);
                     return;
                 } else {
                     System.out.println("Mật khẩu không trùng khớp!\nVui lòng nhập lại!");
@@ -290,7 +293,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
     }
     @Override
     public void changePassword(Scanner sc, User user, String file1) {
-        ArrayList<User> users = new ArrayList<>(getListObjectFromJsonFile(file1));
+        ArrayList<User> users = new ArrayList<>(getListObjectFromJsonFile1(file1));
         int indexOfUser = users.indexOf(user);
 
         while (true) {
@@ -301,7 +304,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             if (password.equals(passwordAgain)) {
                 user.setPassword(password);
                 users.set(indexOfUser, user);
-                convertObjectToJsonFile("user.json", users);
+                convertObjectToJsonFile1("user.json", users);
                 System.out.println("Cài đặt mật khẩu thành công!");
                 break;
             } else {
@@ -311,7 +314,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
     }
     @Override
     public void adminChangePassword(Scanner sc,Admin admin, String file3) {
-        ArrayList<Admin> admins = new ArrayList<>(getListObjectFromJsonFile2(file3));
+        ArrayList<Admin> admins = new ArrayList<>(getListObjectFromJsonFile3(file3));
         int indexOfAdmin = admins.indexOf(admin);
 
         while (true) {
@@ -322,7 +325,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             if (password.equals(passwordAgain)) {
                 admin.setPassword(password);
                 admins.set(indexOfAdmin, admin);
-                convertObjectToJsonFile2("admin.json", admins);
+                convertObjectToJsonFile3("admin.json", admins);
                 System.out.println("Cài đặt mật khẩu thành công!");
                 break;
             } else {
@@ -331,12 +334,12 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
         }
     }
     @Override
-    public void signOut(Scanner sc, String file1,String file2,User user,String file3,Admin admin) {
-            startProgram(sc, file1,file2,user,file3,admin);
+    public void signOut(Scanner sc, String file1,String file2,User user,String file3,Admin admin,Book bookinfo) {
+            startProgram(sc, file1,file2,user,file3,admin,bookinfo);
     }
     public void findBooks(Scanner sc, String file2) {
         try {
-            List<Book> listBooks = getListObjectFromJsonFile1(file2);
+            List<Book> listBooks = getListObjectFromJsonFile2(file2);
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             while (true) {
                 System.out.println("Enter 1: To find books according name");
@@ -354,27 +357,6 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                                 System.out.println("Sách bạn cần tìm là:");
                                 String bookJson = gson.toJson(book);
                                 System.out.println(bookJson);
-                                while (true){
-                                    System.out.println("Enter 1: To borrow book");
-                                    System.out.println("Enter 2: To exit");
-                                    System.out.println("Nhập lựa chọn của bạn");
-                                    int option=sc.nextInt();
-                                    sc.nextLine();
-                                    switch (option){
-                                        case 1:
-                                            if (status(file2, strBookName)) {
-                                                System.out.println("Mượn sách thành công!\nHãy trả lại sách sau 30 ngày để không bị phạt!");
-                                                book.setStatus("unavailable");
-                                                book.setUserBorrow(username);
-                                                convertObjectToJsonFile1("book.json", listBooks);
-                                                break;
-                                            }else {
-                                                System.out.println("Sách bạn muốn mượn không còn!\nVui lòng mượn sách khác hoặc quay lại sau!");
-                                                break;
-                                            }
-                                    }
-                                    break;
-                                }
                             }
                         }
                         break;
@@ -403,13 +385,13 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
     }
 
     public void showListUser(String file1){
-        List<User> users = getListObjectFromJsonFile(file1);
+        List<User> users = getListObjectFromJsonFile1(file1);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String userJson = gson.toJson(users);
         System.out.println(userJson);
     }
     public void showListAdmin(String file3){
-        List<Admin> admins = getListObjectFromJsonFile2(file3);
+        List<Admin> admins = getListObjectFromJsonFile3(file3);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String adminJson = gson.toJson(admins);
         System.out.println(adminJson);
@@ -425,8 +407,8 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
         }
     }
 
-    public void booksAreBorrowing(Scanner sc,String file2,Book bookinfor){
-        List<Book> listBooks = getListObjectFromJsonFile1(file2);
+    public void booksAreBorrowing(Scanner sc,String file1,String file2,Book bookinfo){
+        List<Book> listBooks = getListObjectFromJsonFile2(file2);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         System.out.println("Nhập tên sách đang mượn");
         String searchBorrowing=sc.nextLine();
@@ -444,9 +426,17 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                     sc.nextLine();
                     switch (optionMenu){
                         case 1:
-                            printBook(bookinfor);
+                            printBook(bookinfo);
                             break;
                         case 2:
+                            List<User> user = getListObjectFromJsonFile1(file1);
+                            System.out.println("Trả sách thành công!");
+                            book.setStatus("unavailable");
+                            convertObjectToJsonFile2("book.json", listBooks);
+                                for (User anUser:user){
+                                    anUser.setBooksHaveBeenRed(book);
+                                }
+
 
                             break;
                         case 3:
@@ -464,6 +454,58 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String bookJson = gson.toJson(book);
         System.out.println(bookJson);
+    }
+    void borrowBooks(Scanner sc,String file2,String file1){
+        System.out.println("Vui lòng đăng nhập trước khi mượn sách");
+        System.out.println("Nhập username:");
+        String username = sc.nextLine();
+        System.out.println("Nhập password:");
+        String password = sc.nextLine();
+        List<User> users = getListObjectFromJsonFile1(file1);
+        Optional<List<User>> usersOptional = Optional.ofNullable(users);
+        if (usersOptional.isPresent()) {
+            for (User anuser : users) {
+                if (anuser.getUserName().equals(username) && anuser.getPassword().equals(password)) {
+                    while (true){
+                        List<Book> listBooks = getListObjectFromJsonFile2(file2);
+                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                        System.out.println("Enter 1: To borrow book");
+                        System.out.println("Enter 2: To exit");
+                        System.out.println("Nhập lựa chọn của bạn");
+                        int option=sc.nextInt();
+                        sc.nextLine();
+                        switch (option){
+                            case 1:
+                                System.out.println("Nhập tên sách bạn muốn mượn:");
+                                String strBookName = sc.nextLine();
+                                for (Book book : listBooks) {
+                                    if (book.getTitle().equals(strBookName)) {
+                                        System.out.println("Sách bạn cần tìm là:");
+                                        String bookJson = gson.toJson(book);
+                                        System.out.println(bookJson);
+                                        if (status(file2, strBookName)) {
+                                            System.out.println("Mượn sách thành công!\nHãy trả lại sách sau 30 ngày để không bị phạt!");
+                                            book.setStatus("unavailable");
+                                            book.setUserBorrow(username);
+                                            convertObjectToJsonFile2("book.json", listBooks);
+                                            break;
+                                        }else {
+                                            System.out.println("Sách bạn muốn mượn không còn!\nVui lòng mượn sách khác hoặc quay lại sau!");
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+                            case 2:
+                                return;
+                            default:
+                                System.out.println("Không hợp lệ!");
+                                break;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
