@@ -47,13 +47,4 @@ public class User {
         this.booksAreBorrowing = booksAreBorrowing;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", Sách đã đọc='" + booksHaveBeenRed + '\'' +
-                ", Sách đang mượn='" + booksAreBorrowing + '\'' +
-                '}';
-    }
 }

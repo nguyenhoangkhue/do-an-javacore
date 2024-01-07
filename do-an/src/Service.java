@@ -299,20 +299,17 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
         ArrayList<User> users = new ArrayList<>(getListObjectFromJsonFile1(file1));
         int indexOfUser = users.indexOf(user);
 
-        while (true) {
-            System.out.println("Vui lòng nhập mật khẩu mới:");
-            String password = checkPassword(sc);
-            System.out.println("Vui lòng nhập lại mật khẩu mới:");
-            String passwordAgain = checkPassword(sc);
-            if (password.equals(passwordAgain)) {
-                user.setPassword(password);
-                users.set(indexOfUser, user);
-                convertObjectToJsonFile1("user.json", users);
-                System.out.println("Cài đặt mật khẩu thành công!");
-                break;
-            } else {
-                System.out.println("Mật khẩu không trùng khớp!\nVui lòng nhập lại!");
-            }
+        System.out.println("Vui lòng nhập mật khẩu mới:");
+        String password = checkPassword(sc);
+        System.out.println("Vui lòng nhập lại mật khẩu mới:");
+        String passwordAgain = checkPassword(sc);
+        if (password.equals(passwordAgain)) {
+            user.setPassword(password);
+            users.set(indexOfUser, user);
+            System.out.println("Cài đặt mật khẩu thành công!");
+            convertObjectToJsonFile1("user.json", users);
+        } else {
+            System.out.println("Mật khẩu không trùng khớp!\nVui lòng nhập lại!");
         }
     }
     @Override
@@ -320,20 +317,18 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
         ArrayList<Admin> admins = new ArrayList<>(getListObjectFromJsonFile3(file3));
         int indexOfAdmin = admins.indexOf(admin);
 
-        while (true) {
-            System.out.println("Vui lòng nhập mật khẩu mới:");
-            String password = checkPassword(sc);
-            System.out.println("Vui lòng nhập lại mật khẩu mới:");
-            String passwordAgain = checkPassword(sc);
-            if (password.equals(passwordAgain)) {
-                admin.setPassword(password);
-                admins.set(indexOfAdmin, admin);
-                convertObjectToJsonFile3("admin.json", admins);
-                System.out.println("Cài đặt mật khẩu thành công!");
-                break;
-            } else {
-                System.out.println("Mật khẩu không trùng khớp!\nVui lòng nhập lại!");
-            }
+
+        System.out.println("Vui lòng nhập mật khẩu mới:");
+        String password = checkPassword(sc);
+        System.out.println("Vui lòng nhập lại mật khẩu mới:");
+        String passwordAgain = checkPassword(sc);
+        if (password.equals(passwordAgain)) {
+            admin.setPassword(password);
+            admins.set(indexOfAdmin, admin);
+            convertObjectToJsonFile3("admin.json", admins);
+            System.out.println("Cài đặt mật khẩu thành công!");
+        } else {
+            System.out.println("Mật khẩu không trùng khớp!\nVui lòng nhập lại!");
         }
     }
     @Override
@@ -410,7 +405,8 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
         List<User> user = getListObjectFromJsonFile1(file1);
         for (Book book : listBooks) {
             for (User anUser:user){
-            if (book.getId().equals(id)||book.getTitle().equals(anUser.getBooksAreBorrowing())) {
+                boolean contains = Arrays.asList(anUser.getBooksAreBorrowing()).contains(id);
+            if (contains) {
                 while (true) {
                     System.out.println("Sách bạn cần tìm là:");
                     String bookJson = gson.toJson(book);
@@ -430,17 +426,16 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                             book.setStatus("available");
                             book.setUserBorrow(null);
                             convertObjectToJsonFile2("book.json", listBooks);
-                            String[] booksHaveBeenRed = new String[listBooks.size()];
-                            for (int i = 0; i < listBooks.size(); i++) {
-                                if (listBooks.get(i) == null && listBooks.get(i) != book) {
-                                    booksHaveBeenRed[i] = book.getTitle();
-                                    anUser.setBooksHaveBeenRed(booksHaveBeenRed);
-                                    convertObjectToJsonFile1("user.json", user);
-                                }
+                            anUser.setBooksAreBorrowing(null);
+                            convertObjectToJsonFile1("user.json", user);
+                            boolean contain = Arrays.asList(anUser.getBooksHaveBeenRed()).contains(id);
+                            if (!contain){
+                                anUser.setBooksHaveBeenRed(new String[]{book.getId()});
+                                convertObjectToJsonFile1("user.json",user);
                             }
                             break;
                         case 3:
-                            break;
+                            return;
                         default:
                             System.out.println("Không hợp lệ!");
                             break;
@@ -448,7 +443,6 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                 }
             }
             }
-
         }
         System.out.println("Không có kết quả phù hợp!\nVui lòng nhập lại tên sách!");
     }
@@ -485,27 +479,26 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                         sc.nextLine();
                         switch (option){
                             case 1:
-                                System.out.println("Nhập tên sách bạn muốn mượn:");
-                                String strBookName = sc.nextLine();
+                                System.out.println("Nhập id sách bạn muốn mượn:");
+                                String id = sc.nextLine();
                                 for (Book book : listBooks) {
-                                    if (book.getTitle().equals(strBookName)) {
+                                    if (book.getId().equals(id)) {
                                         System.out.println("Sách bạn cần tìm là:");
                                         String bookJson = gson.toJson(book);
                                         System.out.println(bookJson);
-                                        if (status(file2, strBookName)) {
-                                            System.out.println("Mượn sách thành công!\nHãy trả lại sách sau 30 ngày để không bị phạt!");
-                                            book.setStatus("unavailable");
-                                            book.setUserBorrow(username);
-                                            convertObjectToJsonFile2("book.json", listBooks);
-                                            String[] booksAreBorrowing=new String[listBooks.size()];
-                                            for(int i=0;i<listBooks.size();i++){
-                                                if (listBooks.get(i)==null&&listBooks.get(i)!=book){
-                                                    booksAreBorrowing[i]=strBookName;
-                                                    anUser.setBooksHaveBeenRed(booksAreBorrowing);
-                                                    convertObjectToJsonFile1("user.json",users);
-                                                }
+                                        if (status(file2, id)) {
+                                            if (!isBorrowing(file1)){
+                                                System.out.println("Mượn sách thành công!\nHãy trả lại sách sau 30 ngày để không bị phạt!");
+                                                book.setStatus("unavailable");
+                                                book.setUserBorrow(username);
+                                                convertObjectToJsonFile2("book.json", listBooks);
+                                                anUser.setBooksAreBorrowing(new String[]{book.getId()});
+                                                convertObjectToJsonFile1("user.json",users);
+                                                break;
+                                            }else {
+                                                System.out.println("Vui trả sách đang mượn trước khi mượn sách khác!");
+                                                break;
                                             }
-                                            break;
                                         }else {
                                             System.out.println("Sách bạn muốn mượn không còn!\nVui lòng mượn sách khác hoặc quay lại sau!");
                                             break;
@@ -522,10 +515,13 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                     }
                 }else {
                     System.out.println("Tài khoản hoặc mật khẩu không chính xác!\nVui lòng nhập lại");
+                    borrowBooks(sc, file2, file1);
+                    return;
                 }
             }
         }else {
             System.out.println("Tài khoản hoặc mật khẩu không chính xác!\nVui lòng nhập lại");
+            borrowBooks(sc, file2, file1);
         }
     }
 }

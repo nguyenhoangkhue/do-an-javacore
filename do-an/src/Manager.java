@@ -103,7 +103,7 @@ public abstract class Manager {
             Pattern pattern = Pattern.compile("\\S{7,15}");
             boolean isPassword = pattern.matcher(password).matches();
             if (!isPassword) {
-                System.out.println("Mật khẩu không hợp lệ!\nVui lòng nhập !");
+                System.out.println("Mật khẩu không hợp lệ!\nVui lòng nhập lại!");
             } else {
                 return password;
             }
@@ -154,14 +154,21 @@ public abstract class Manager {
         }
         return false;
     }
-    boolean status(String file2,String strBookName){
+    boolean status(String file2,String id){
         List<Book> listBooks = getListObjectFromJsonFile2(file2);
         for (Book book : listBooks) {
-            if (book.getTitle().equals(strBookName)||book.getStatus().equals("active")) {
+            if (book.getId().equals(id)||book.getStatus().equals("active")) {
                 return true;
             }
         }
         return false;
     }
-
+    boolean isBorrowing(String file1){
+        List<User>users=getListObjectFromJsonFile1(file1);
+        for (User anUser:users){
+            if (anUser.getBooksAreBorrowing().equals(null));
+            return false;
+        }
+        return true;
+    }
 }
