@@ -2,10 +2,8 @@
   {
     "username": "asvdad",
     "password": "123456789",
-    "booksHaveBeenRed": []
-  },
-  {
-    "username": "dasfadsf",
-    "password": "123456789"
+    "booksHaveBeenRedId": [
+      "1"
+    ]
   }
 ]

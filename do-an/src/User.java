@@ -1,18 +1,15 @@
 public class User {
     private String username;
     private String password;
-    private String[] booksHaveBeenRed;
-    private String[] booksAreBorrowing;
+    private String[] booksHaveBeenRedId;
+    private String bookAreBorrowingId;
     public User(){
     }
-    public User(String userName, String password,String[] booksHaveBeenRed,String[] booksAreBorrowing){
+    public User(String userName, String password,String[] booksHaveBeenRedId,String bookAreBorrowingId){
         this.username=userName;
         this.password=password;
-        this.booksHaveBeenRed=booksHaveBeenRed;
-        this.booksAreBorrowing=booksAreBorrowing;
-    }
-
-    public User(String username, String password) {
+        this.booksHaveBeenRedId=booksHaveBeenRedId;
+        this.bookAreBorrowingId=bookAreBorrowingId;
     }
 
     public String getUserName() {
@@ -31,20 +28,20 @@ public class User {
         this.password = password;
     }
 
-    public String[] getBooksHaveBeenRed() {
-        return booksHaveBeenRed;
+    public String[] getBooksHaveBeenRedId() {
+        return booksHaveBeenRedId;
     }
 
-    public void setBooksHaveBeenRed(String[] booksHaveBeenRed) {
-        this.booksHaveBeenRed = booksHaveBeenRed;
+    public void setBooksHaveBeenRedId(String[] booksHaveBeenRedId) {
+        this.booksHaveBeenRedId = booksHaveBeenRedId;
     }
 
-    public String[] getBooksAreBorrowing() {
-        return booksAreBorrowing;
+    public String getBookAreBorrowingId() {
+        return bookAreBorrowingId;
     }
 
-    public void setBooksAreBorrowing(String[] booksAreBorrowing) {
-        this.booksAreBorrowing = booksAreBorrowing;
+    public void setBookAreBorrowingId(String bookAreBorrowingId) {
+        this.bookAreBorrowingId = bookAreBorrowingId;
     }
-
+    User(String username,String password){}
 }

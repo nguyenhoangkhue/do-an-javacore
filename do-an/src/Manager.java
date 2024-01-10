@@ -166,9 +166,9 @@ public abstract class Manager {
     boolean isBorrowing(String file1){
         List<User>users=getListObjectFromJsonFile1(file1);
         for (User anUser:users){
-            if (anUser.getBooksAreBorrowing().equals(null));
-            return false;
+            if (anUser.getBookAreBorrowingId()==null);
+            return true;
         }
-        return true;
+        return false;
     }
 }

@@ -146,8 +146,10 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                     }
                 }
                 System.out.println("Tài khoản hoặc mật khẩu không chính xác!\nVui lòng nhập lại");
+                signIn(sc,file1,file2,user,file3,admin,bookinfo);
             } else {
                 System.out.println("Tài khoản hoặc mật khẩu không chính xác!\nVui lòng nhập lại");
+                signIn(sc,file1,file2,user,file3,admin,bookinfo);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -167,18 +169,23 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                         break;
                     } else {
                         System.out.println("Tài khoản đã tồn tại!\nVui lòng nhập lại username khác:");
+                        signUp(sc,file1,file3);
                     }
                 } else {
                     System.out.println("Tài khoản không hợp lệ!\nVui lòng nhập lại username khác:");
+                    signUp(sc,file1,file3);
                 }
             }
 
             System.out.println("Nhập password:");
             String password = checkPassword(sc);
             user.setPassword(password);
+            user.setBooksHaveBeenRedId(null);
+            user.setBookAreBorrowingId(null);
             ArrayList<User> users = new ArrayList<>(getListObjectFromJsonFile1(file1));
             users.add(user);
             convertObjectToJsonFile1("user.json", users);
+            System.out.println("Chúc mừng bạn đã đăng ký thành công!");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -197,9 +204,11 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                         break;
                     } else {
                         System.out.println("Tài khoản đã tồn tại!\nVui lòng nhập lại username khác:");
+                        addNewAdmin(sc,file1,file3);
                     }
                 } else {
                     System.out.println("Tài khoản không hợp lệ!\nVui lòng nhập lại username khác:");
+                    addNewAdmin(sc,file1,file3);
                 }
             }
 
@@ -228,6 +237,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                     break;
                 } else {
                     System.out.println("Sách đã tồn tại!\nVui lòng nhập tên sách khác:");
+                    addNewBooks(sc,file2);
                 }
             }
             while (true) {
@@ -400,17 +410,18 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
     public void booksAreBorrowing(Scanner sc,String file1,String file2,Book bookinfo){
         List<Book> listBooks = getListObjectFromJsonFile2(file2);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        List<User> user = getListObjectFromJsonFile1(file1);
+        for (User anUser:user){
+        if (anUser.getBookAreBorrowingId()!=null){
+            System.out.println(anUser.getBookAreBorrowingId());
+        }
         System.out.println("Nhập id sách bạn đang mượn");
         String id=sc.nextLine();
-        List<User> user = getListObjectFromJsonFile1(file1);
         for (Book book : listBooks) {
-            for (User anUser:user){
-                boolean contains = Arrays.asList(anUser.getBooksAreBorrowing()).contains(id);
+                boolean contains = Arrays.asList(anUser.getBookAreBorrowingId()).contains(id);
             if (contains) {
                 while (true) {
-                    System.out.println("Sách bạn cần tìm là:");
-                    String bookJson = gson.toJson(book);
-                    System.out.println(bookJson);
+                    System.out.println("Sách bạn cần tìm là:"+book.getTitle());
                     System.out.println("Enter 1: To show book information");
                     System.out.println("Enter 2: To return the book");
                     System.out.println("Enter 3: To exit");
@@ -426,11 +437,11 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                             book.setStatus("available");
                             book.setUserBorrow(null);
                             convertObjectToJsonFile2("book.json", listBooks);
-                            anUser.setBooksAreBorrowing(null);
+                            anUser.setBookAreBorrowingId(null);
                             convertObjectToJsonFile1("user.json", user);
-                            boolean contain = Arrays.asList(anUser.getBooksHaveBeenRed()).contains(id);
+                            boolean contain = Arrays.asList(anUser.getBooksHaveBeenRedId()).contains(id);
                             if (!contain){
-                                anUser.setBooksHaveBeenRed(new String[]{book.getId()});
+                                anUser.setBooksHaveBeenRedId(new String[]{book.getId()});
                                 convertObjectToJsonFile1("user.json",user);
                             }
                             break;
@@ -444,7 +455,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             }
             }
         }
-        System.out.println("Không có kết quả phù hợp!\nVui lòng nhập lại tên sách!");
+        System.out.println("Không có kết quả phù hợp!\nVui lòng nhập lại id sách!");
     }
     void printBook(Book book) {
         System.out.println("Thông tin sách là");
@@ -455,7 +466,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
     void booksHaveBeenRed(String file1){
         List<User> users = getListObjectFromJsonFile1(file1);
         for (User user:users ){
-            System.out.println(user.getBooksHaveBeenRed());
+            System.out.println(user.getBooksHaveBeenRedId());
         }
     }
     void borrowBooks(Scanner sc,String file2,String file1){
@@ -487,14 +498,19 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                                         String bookJson = gson.toJson(book);
                                         System.out.println(bookJson);
                                         if (status(file2, id)) {
-                                            if (!isBorrowing(file1)){
-                                                System.out.println("Mượn sách thành công!\nHãy trả lại sách sau 30 ngày để không bị phạt!");
-                                                book.setStatus("unavailable");
-                                                book.setUserBorrow(username);
-                                                convertObjectToJsonFile2("book.json", listBooks);
-                                                anUser.setBooksAreBorrowing(new String[]{book.getId()});
-                                                convertObjectToJsonFile1("user.json",users);
-                                                break;
+                                            if (isBorrowing(file1)){
+                                                boolean contain = Arrays.asList(anUser.getBooksHaveBeenRedId()).contains(id);
+                                                if (!contain){
+                                                    System.out.println("Mượn sách thành công!\nHãy trả lại sách sau 30 ngày để không bị phạt!");
+                                                    book.setStatus("unavailable");
+                                                    book.setUserBorrow(username);
+                                                    convertObjectToJsonFile2("book.json", listBooks);
+                                                    anUser.setBookAreBorrowingId(book.getId());
+                                                    convertObjectToJsonFile1("user.json",users);
+                                                    break;
+                                                }else {
+                                                    System.out.println("Bạn đã đọc sách này rồi vui lòng mượn sách khác!");
+                                                }
                                             }else {
                                                 System.out.println("Vui trả sách đang mượn trước khi mượn sách khác!");
                                                 break;
