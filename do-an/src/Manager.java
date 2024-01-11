@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public abstract class Manager {
     abstract void changePassword(Scanner sc, User user, String file1);
     abstract void adminChangePassword(Scanner sc, Admin admin, String file3);
-    abstract void signOut(Scanner sc, String file1,String file2,User user,String file3,Admin admin,Book bookinfo);
+    abstract void signOut(Scanner sc, String file1,String file2,User user,String file3,Admin admin,Book bookinfo) throws Exception;
 
     public void convertObjectToJsonFile1(String file1, Object obj) {
         try {
