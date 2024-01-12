@@ -78,7 +78,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             System.out.println("-----------------MENU-----------------");
             System.out.println("Nhấn 1: Để thay đổi password");
             System.out.println("Nhấn 2: Để tìm sách");
-            System.out.println("Nhấn 3: Để xem danh sách user");
+            System.out.println("Nhấn 3: Để xem danh sách user và thông tin của họ");
             System.out.println("Nhấn 4: Để xem danh sách admin");
             System.out.println("Nhấn 5: Để thêm admin mới");
             System.out.println("Nhấn 6: Để them sách mới");
