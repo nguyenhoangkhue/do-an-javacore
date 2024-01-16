@@ -471,7 +471,6 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                                 convertObjectToJsonFile1("user.json", user);
                                 boolean contain = Arrays.asList(anUser.getBooksHaveBeenRedId()).contains(id);
                                 if (!contain) {
-                                    arr=addX(anUser.getBooksHaveBeenRedId(),id);
                                     anUser.setBooksHaveBeenRedId(new String[]{book.getId()});
                                     convertObjectToJsonFile1("user.json", user);
                                 }
@@ -547,14 +546,14 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
     void removeUser(Scanner sc,String file1){
         List<User> users = getListObjectFromJsonFile1(file1);
         System.out.println("Nhập username người dùng muốn xóa:");
-        String removeUser=sc.nextLine();
+        String userName=sc.nextLine();
+        List<User> newListUser = new ArrayList<>();
         for (User user:users){
-            if(removeUser.equals(user.getUserName())){
-                System.out.println(user);
-                System.out.println("Đã xóa "+removeUser+" khỏi danh sách người dùng!");
+            if(!userName.equals(user.getUserName())){
+                newListUser.add(user);
+                convertObjectToJsonFile1("user.json",newListUser);
+                System.out.println("Đã xóa "+userName+" khỏi danh sách người dùng!");
                 break;
-            }else{
-                System.out.println("Người dùng không tồn tại!\nVui lòng nhập username khác!");
             }
         }
     }
@@ -562,14 +561,13 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
         List<Book> listBook = getListObjectFromJsonFile2(file2);
         System.out.println("Nhập id sách muốn xóa:");
         String removeBookId=sc.nextLine();
+        List<Book> newListBook = new ArrayList<>();
         for (Book book:listBook){
-            if(removeBookId.equals(book.getId())){
-                System.out.println(book);
+            if(!removeBookId.equals(book.getId())){
+                newListBook.add(book);
+                convertObjectToJsonFile2("book.json",newListBook);
                 System.out.println("Đã xóa sách có id "+removeBookId+" khỏi thư viện!");
                 break;
-            }else{
-                System.out.println("Sách không tồn tại!\nVui lòng nhập id khác!");
-                removeBook(sc,file2);
             }
         }
     }
