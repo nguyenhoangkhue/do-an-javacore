@@ -261,7 +261,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                     }
                 }
             }
-            System.out.println("Nhập số thể loại của sách");
+            System.out.println("Nhập số lượng thể loại của sách");
             int n = sc.nextInt();
             sc.nextLine();
             System.out.println("Nhập thể loại:");
@@ -292,25 +292,30 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
 
     @Override
     public void forgotPassword(Scanner sc, String file1, String file2, User user, String file3, Admin admin, Book bookinfo) {
+        List<User> users = getListObjectFromJsonFile1(file1);
         System.out.println("Vui lòng nhập user name của bạn:");
         String username = sc.nextLine();
-        if (isExistsUsername(file1, username, file3)) {
-            while (true) {
-                System.out.println("Vui lòng nhập mật khẩu mới:");
-                String password = checkPassword(sc);
-                System.out.println("Vui lòng nhập lại mật khẩu mới:");
-                String passwordAgain = checkPassword(sc);
-                if (password.equals(passwordAgain)) {
-                    System.out.println("Cài đặt mật khẩu thành công!");
-                    System.out.println("Vui lòng đăng nhập lại!");
-                    signIn(sc, file1, file2, user, file3, admin, bookinfo);
-                    return;
-                } else {
-                    System.out.println("Mật khẩu không trùng khớp!\nVui lòng nhập lại!");
+        for (User anUser:users){
+            if (username.equals(anUser.getUserName())) {
+                while (true) {
+                    System.out.println("Vui lòng nhập mật khẩu mới:");
+                    String password = checkPassword(sc);
+                    System.out.println("Vui lòng nhập lại mật khẩu mới:");
+                    String passwordAgain = checkPassword(sc);
+                    if (password.equals(passwordAgain)) {
+                        anUser.setPassword(password);
+                        convertObjectToJsonFile1("user.json",users);
+                        System.out.println("Cài đặt mật khẩu thành công!");
+                        System.out.println("Vui lòng đăng nhập lại!");
+                        signIn(sc, file1, file2, user, file3, admin, bookinfo);
+                        return;
+                    } else {
+                        System.out.println("Mật khẩu không trùng khớp!\nVui lòng nhập lại!");
+                    }
                 }
+            } else {
+                System.out.println("Tài khoản không tồn tại!");
             }
-        } else {
-            System.out.println("Tài khoản không tồn tại!");
         }
     }
 
@@ -318,18 +323,21 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
     public void changePassword(Scanner sc, User user, String file1) {
         ArrayList<User> users = new ArrayList<>(getListObjectFromJsonFile1(file1));
         int indexOfUser = users.indexOf(user);
-
-        System.out.println("Vui lòng nhập mật khẩu mới:");
-        String password = checkPassword(sc);
-        System.out.println("Vui lòng nhập lại mật khẩu mới:");
-        String passwordAgain = checkPassword(sc);
-        if (password.equals(passwordAgain)) {
-            user.setPassword(password);
-            users.set(indexOfUser, user);
-            System.out.println("Cài đặt mật khẩu thành công!");
-            convertObjectToJsonFile1("user.json", users);
-        } else {
-            System.out.println("Mật khẩu không trùng khớp!\nVui lòng nhập lại!");
+        while (true) {
+            System.out.println("Vui lòng nhập mật khẩu mới:");
+            String password = checkPassword(sc);
+            System.out.println("Vui lòng nhập lại mật khẩu mới:");
+            String passwordAgain = checkPassword(sc);
+            if (password.equals(passwordAgain)) {
+                user.setPassword(password);
+                users.set(indexOfUser, user);
+                System.out.println("Thay đổi mật khẩu thành công!");
+                convertObjectToJsonFile1("user.json", users);
+                break;
+            } else {
+                System.out.println("Mật khẩu không trùng khớp!\nVui lòng nhập lại!");
+                changePassword(sc,user,file1);
+            }
         }
     }
 
@@ -337,19 +345,20 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
     public void adminChangePassword(Scanner sc, Admin admin, String file3) {
         ArrayList<Admin> admins = new ArrayList<>(getListObjectFromJsonFile3(file3));
         int indexOfAdmin = admins.indexOf(admin);
-
-
-        System.out.println("Vui lòng nhập mật khẩu mới:");
-        String password = checkPassword(sc);
-        System.out.println("Vui lòng nhập lại mật khẩu mới:");
-        String passwordAgain = checkPassword(sc);
-        if (password.equals(passwordAgain)) {
-            admin.setPassword(password);
-            admins.set(indexOfAdmin, admin);
-            convertObjectToJsonFile3("admin.json", admins);
-            System.out.println("Cài đặt mật khẩu thành công!");
-        } else {
-            System.out.println("Mật khẩu không trùng khớp!\nVui lòng nhập lại!");
+        while (true) {
+            System.out.println("Vui lòng nhập mật khẩu mới:");
+            String password = checkPassword(sc);
+            System.out.println("Vui lòng nhập lại mật khẩu mới:");
+            String passwordAgain = checkPassword(sc);
+            if (password.equals(passwordAgain)) {
+                admin.setPassword(password);
+                admins.set(indexOfAdmin, admin);
+                convertObjectToJsonFile3("admin.json", admins);
+                System.out.println("Cài đặt mật khẩu thành công!");
+            } else {
+                System.out.println("Mật khẩu không trùng khớp!\nVui lòng nhập lại!");
+                adminChangePassword(sc,admin,file3);
+            }
         }
     }
 
@@ -529,14 +538,15 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                                     break;
                                 } else {
                                     System.out.println("Bạn đã đọc sách này rồi!\nVui lòng mượn sách khác!");
+                                    borrowBooks(sc,file2,file1);
                                 }
                             } else {
                                 System.out.println("Bạn đang mượn sách!\nVui trả sách đang mượn trước khi mượn sách khác!");
                                 break;
                             }
                         } else {
-                            System.out.println("Sách bạn muốn mượn không còn!\nVui lòng mượn sách khác hoặc quay lại sau!");
-                            break;
+                            System.out.println("Sách bạn muốn mượn không còn!\nVui lòng mượn sách khác hoặc thử lại sau!");
+                            borrowBooks(sc,file2,file1);
                         }
                     }
                 }
