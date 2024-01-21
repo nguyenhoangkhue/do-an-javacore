@@ -331,8 +331,8 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             if (password.equals(passwordAgain)) {
                 user.setPassword(password);
                 users.set(indexOfUser, user);
-                System.out.println("Thay đổi mật khẩu thành công!");
                 convertObjectToJsonFile1("user.json", users);
+                System.out.println("Thay đổi mật khẩu thành công!");
                 break;
             } else {
                 System.out.println("Mật khẩu không trùng khớp!\nVui lòng nhập lại!");
