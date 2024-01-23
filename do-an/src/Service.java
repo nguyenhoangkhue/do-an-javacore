@@ -34,7 +34,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
 
     }
 
-    public void userloginSuccess(Scanner sc, String file1, User user, String file2, String file3, Admin admin, Book bookinfo) throws Exception {
+     void userloginSuccess(Scanner sc, String file1, User user, String file2, String file3, Admin admin, Book bookinfo) throws Exception {
         while (true) {
             System.out.println("-----------------MENU-----------------");
             System.out.println("Nhấn 1: Để thay đổi password");
@@ -73,7 +73,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
         }
     }
 
-    public void adminloginSuccess(Scanner sc, String file1, User user, String file2, String file3, Admin admin, Book bookinfo) throws Exception {
+     void adminloginSuccess(Scanner sc, String file1, User user, String file2, String file3, Admin admin, Book bookinfo) throws Exception {
         while (true) {
             System.out.println("-----------------MENU-----------------");
             System.out.println("Nhấn 1: Để thay đổi password");
@@ -432,21 +432,21 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
         }
     }
 
-    public void showListUser(String file1) {
+     void showListUser(String file1) {
         List<User> users = getListObjectFromJsonFile1(file1);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String userJson = gson.toJson(users);
         System.out.println(userJson);
     }
 
-    public void showListAdmin(String file3) {
+     void showListAdmin(String file3) {
         List<Admin> admins = getListObjectFromJsonFile3(file3);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String adminJson = gson.toJson(admins);
         System.out.println(adminJson);
     }
 
-    public void booksAreBorrowing(Scanner sc, String file1, String file2, Book bookinfo) {
+     void booksAreBorrowing(Scanner sc, String file1, String file2, Book bookinfo) {
         List<Book> listBooks = getListObjectFromJsonFile2(file2);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         List<User> user = getListObjectFromJsonFile1(file1);
