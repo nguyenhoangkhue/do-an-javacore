@@ -32,7 +32,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             }
         }
 
-    }
+}
 
      void userloginSuccess(Scanner sc, String file1, User user, String file2, String file3, Admin admin, Book bookinfo) throws Exception {
         while (true) {
@@ -43,7 +43,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             System.out.println("Nhấn 4: Để xem sách đã đọc");
             System.out.println("Nhấn 5: Để xem sách đang mượn");
             System.out.println("Nhấn 6: Để đăng xuất");
-            System.out.println("Nhấn 7: Để thoát");
+            System.out.println("Nhấn 7: Để quay lại");
             System.out.println("Nhập lựa chọn của bạn");
             int optionMenu = sc.nextInt();
             sc.nextLine();
@@ -53,21 +53,23 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                     break;
                 case 2:
                     findBooks(sc, file2);
+                    break;
                 case 3:
                     borrowBooks(sc, file2, file1);
+                    break;
                 case 4:
                     booksHaveBeenRed(file1);
-                    return;
+                    break;
                 case 5:
                     booksAreBorrowing(sc, file1, file2, bookinfo);
-                    return;
+                    break;
                 case 6:
                     signOut(sc, file1, file2, user, file3, admin, bookinfo);
                     return;
                 case 7:
                     return;
                 default:
-                    System.out.println("Không hợp lệ!");
+                    System.out.println("Không hợp lệ!\nVui lòng nhập lại!");
                     break;
             }
         }
@@ -85,7 +87,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             System.out.println("Nhấn 7: Để xóa người dùng");
             System.out.println("Nhấn 8: Để xóa sách cũ");
             System.out.println("Nhấn 9: Để đăng xuất");
-            System.out.println("Nhấn 10: Để thoát");
+            System.out.println("Nhấn 10: Để quay lại");
             System.out.println("Nhập lựa chọn của bạn");
             int optionMenu = sc.nextInt();
             sc.nextLine();
@@ -95,6 +97,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                     break;
                 case 2:
                     findBooks(sc, file2);
+                    break;
                 case 3:
                     showListUser(file1);
                     break;
@@ -119,7 +122,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                 case 10:
                     return;
                 default:
-                    System.out.println("Không hợp lệ!");
+                    System.out.println("Không hợp lệ!\nVui lòng nhập lại!");
                     break;
             }
         }
@@ -375,7 +378,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                 System.out.println("Nhập 1: Để tìm sách theo tên");
                 System.out.println("Nhập 2: Để tìm sách theo thể loại");
                 System.out.println("Nhập 3: Để tìm sách theo id");
-                System.out.println("Nhập 4: Để thoát");
+                System.out.println("Nhập 4: Để quay lại");
                 System.out.println("Nhập lựa chọn của bạn");
                 int optionMenu = sc.nextInt();
                 sc.nextLine();
@@ -421,7 +424,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                         }
                         break;
                     case 4:
-                        break;
+                        return;
                     default:
                         System.out.println("Không hợp lệ!");
                         break;
@@ -451,7 +454,11 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         List<User> user = getListObjectFromJsonFile1(file1);
         for (User anUser : user) {
-            if (anUser.getBookAreBorrowingId() != null) {
+            if (anUser.getBookAreBorrowingId() == null){
+                System.out.println("Bạn đang không mượn sách nào!");
+                break;
+            }
+            else {
                 System.out.println(anUser.getBookAreBorrowingId());
             }
             System.out.println("Nhập id sách bạn đang mượn");
@@ -463,7 +470,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                         System.out.println("Sách bạn cần tìm là:" + book.getTitle());
                         System.out.println("Nhập 1: Để xem thông tin sách");
                         System.out.println("Nhập 2: Để trả sách");
-                        System.out.println("Nhập 3: Để thoát");
+                        System.out.println("Nhập 3: Để quay lại");
                         System.out.println("Nhập lựa chọn của bạn");
                         int optionMenu = sc.nextInt();
                         sc.nextLine();
@@ -491,10 +498,11 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                                 break;
                         }
                     }
+                }else{
+                    System.out.println("Không có kết quả phù hợp!\nVui lòng nhập lại id sách!");
                 }
             }
         }
-        System.out.println("Không có kết quả phù hợp!\nVui lòng nhập lại id sách!");
     }
 
     void printBook(Book book) {
