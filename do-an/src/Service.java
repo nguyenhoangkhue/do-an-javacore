@@ -325,7 +325,6 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
     @Override
     public void changePassword(Scanner sc, User user, String file1) {
         ArrayList<User> users = new ArrayList<>(getListObjectFromJsonFile1(file1));
-        int indexOfUser = users.indexOf(user);
         while (true) {
             System.out.println("Vui lòng nhập mật khẩu mới:");
             String password = checkPassword(sc);
@@ -333,7 +332,12 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             String passwordAgain = checkPassword(sc);
             if (password.equals(passwordAgain)) {
                 user.setPassword(password);
-                users.set(indexOfUser, user);
+                for(User anUser : users){
+                    if(anUser.getUserName().equals(user.getUserName())){
+                        anUser.setPassword(password);
+                        users.set(users.indexOf(anUser),anUser);
+                    }
+                }
                 convertObjectToJsonFile1("user.json", users);
                 System.out.println("Thay đổi mật khẩu thành công!");
                 break;
@@ -347,7 +351,6 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
     @Override
     public void adminChangePassword(Scanner sc, Admin admin, String file3) {
         ArrayList<Admin> admins = new ArrayList<>(getListObjectFromJsonFile3(file3));
-        int indexOfAdmin = admins.indexOf(admin);
         while (true) {
             System.out.println("Vui lòng nhập mật khẩu mới:");
             String password = checkPassword(sc);
@@ -355,7 +358,12 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             String passwordAgain = checkPassword(sc);
             if (password.equals(passwordAgain)) {
                 admin.setPassword(password);
-                admins.set(indexOfAdmin, admin);
+                for(Admin anAdmin : admins){
+                    if(anAdmin.getUserName().equals(admin.getUserName())){
+                        anAdmin.setPassword(password);
+                        admins.set(admins.indexOf(anAdmin),anAdmin);
+                    }
+                }
                 convertObjectToJsonFile3("admin.json", admins);
                 System.out.println("Cài đặt mật khẩu thành công!");
             } else {
