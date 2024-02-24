@@ -17,13 +17,13 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
             sc.nextLine();
             switch (optionMenu) {
                 case 1:
-                    signIn(sc, file1, file2, user, file3, admin, bookinfo);
+                    signIn(sc, file1, file2, file3, admin, bookinfo);
                     break;
                 case 2:
                     signUp(sc, file1, file3);
                     break;
                 case 3:
-                    forgotPassword(sc, file1, file2, user, file3, admin, bookinfo);
+                    forgotPassword(sc, file1, file2, file3, admin, bookinfo);
                     break;
                 case 4:
                     return;
@@ -129,7 +129,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
     }
 
     @Override
-    public void signIn(Scanner sc, String file1, String file2, User user, String file3, Admin admin, Book bookinfo) {
+    public void signIn(Scanner sc, String file1, String file2, String file3, Admin admin, Book bookinfo) {
         try {
             System.out.println("***************ĐĂNG NHẬP***************");
             System.out.println("Nhập username:");
@@ -145,20 +145,20 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                     for (Admin anAdmin : admins) {
                         if (anUser.getUserName().equals(username) && anUser.getPassword().equals(password)) {
                             System.out.println("Xin chào " + anUser.getUserName() + "!\nBạn có thể thực hiện các hành động sau:");
-                            userloginSuccess(sc, file1, user, file2, file3, admin, bookinfo);
+                            userloginSuccess(sc, file1, anUser, file2, file3, admin, bookinfo);
                             return;
                         } else if (anAdmin.getUserName().equals(username) && anAdmin.getPassword().equals(password)) {
                             System.out.println("Xin chào " + anAdmin.getUserName() + "!\nBạn có thể thực hiện các hành động sau:");
-                            adminloginSuccess(sc, file1, user, file2, file3, admin, bookinfo);
+                            adminloginSuccess(sc, file1, anAdmin, file2, file3, admin, bookinfo);
                             return;
                         }
                     }
                 }
                 System.out.println("Tài khoản hoặc mật khẩu không chính xác!\nVui lòng nhập lại");
-                signIn(sc, file1, file2, user, file3, admin, bookinfo);
+                signIn(sc, file1, file2, file3, admin, bookinfo);
             } else {
                 System.out.println("Tài khoản hoặc mật khẩu không chính xác!\nVui lòng nhập lại");
-                signIn(sc, file1, file2, user, file3, admin, bookinfo);
+                signIn(sc, file1, file2, file3, admin, bookinfo);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -294,7 +294,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
     }
 
     @Override
-    public void forgotPassword(Scanner sc, String file1, String file2, User user, String file3, Admin admin, Book bookinfo) {
+    public void forgotPassword(Scanner sc, String file1, String file2, String file3, Admin admin, Book bookinfo) {
         List<User> users = getListObjectFromJsonFile1(file1);
         System.out.println("Vui lòng nhập user name của bạn:");
         String username = sc.nextLine();
@@ -310,7 +310,7 @@ public class Service extends Manager implements SignIn,SignUp,ForgotPassword,Sig
                         convertObjectToJsonFile1("user.json",users);
                         System.out.println("Cài đặt mật khẩu thành công!");
                         System.out.println("Vui lòng đăng nhập lại!");
-                        signIn(sc, file1, file2, user, file3, admin, bookinfo);
+                        signIn(sc, file1, file2, file3, admin, bookinfo);
                         return;
                     } else {
                         System.out.println("Mật khẩu không trùng khớp!\nVui lòng nhập lại!");
